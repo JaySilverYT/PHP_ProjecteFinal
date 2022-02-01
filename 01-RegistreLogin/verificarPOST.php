@@ -1,11 +1,14 @@
 <?php
-require_once("afegeixUsuariBBDD.php");
+//require_once("afegeixUsuariBBDD.php");
+require_once("bbddConex.php");
 $username = null;
 $email = null;
 $firstName = null;
 $lastName= null;
 $password = null;
 $verifyPassword = null;
+$activationDate = null;
+$activationCode = null;
 
 if (isset($_POST["username"]) && !is_numeric($_POST["username"]) && strlen($_POST["username"]) <= 16 && strlen($_POST["username"]) > 0 && ctype_space($_POST["username"]) == false)
 {
@@ -48,8 +51,10 @@ if (!is_null($username) && !is_null($email) && !is_null($firstName) && !is_null(
     else 
     {
         $password = password_hash($password, PASSWORD_DEFAULT);
+        
+        $activationCode = hash('sha256', rand());
 
-        crearUsuario($email, $username, $password, $firstName, $lastName); //Crea el usuario en la BBDD.
+        crearUsuario($email, $username, $password, $firstName, $lastName, $activationCode); //Crea el usuario en la BBDD.
 
         header("Location: ../01-RegistreLogin/index.php?registroOK=true"); //Et retorna al Login
     }
